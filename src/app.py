@@ -10,7 +10,7 @@ from flask import Flask, jsonify, request
 # /person/id --> actualizamos el usuario --> PUT
 # el almacenamiento va a ser local, se guarda en el archivo y se borra a actualizar --> de momento
 
-people=[
+people =[
     {
         "id":1,
         "name":"Deimian",
@@ -108,12 +108,26 @@ def update_person(theid=None):
 
 
 
-# @app.route("/person", methods=["DELETE"])
-# def delete_all_person():
-#     lista_empty = []
-#     people = lista_empty
-#     print(people)
-#     return jsonify({"message":"succees"}), 201
+@app.route("/person/<int:theid>", methods=["DELETE"])
+def delete_all_person(theid=None):
+    global people
+
+    if theid is None:
+        return jsonify({"message":"the id is necesary"}), 400
+
+    # for person in people:
+    #     if person.get("id") == theid:
+    #         print("Debo eliminar este user")
+    #         return jsonify([]), 201
+
+    result = list(filter(lambda item: item.get("id") != theid, people))
+    people = result
+    
+    people = result
+    if result:
+        return jsonify("todo bien"), 201
+
+    return jsonify({"message":"user not found"}), 404
 
 
 
